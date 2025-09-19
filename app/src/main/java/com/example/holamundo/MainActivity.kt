@@ -96,7 +96,9 @@ fun AppContent(modifier: Modifier = Modifier) {
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = productoExpandido)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
             )
 
             DropdownMenu(
