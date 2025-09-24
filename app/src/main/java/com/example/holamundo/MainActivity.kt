@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +60,9 @@ class MainActivity : ComponentActivity() {
 fun AppContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
+    var usuario: String by remember { mutableStateOf("") }
+    var contrasena: String by remember { mutableStateOf("") }
+
     data class Opcion(val value: String, val label: String)
     val productoOpciones = listOf(
         Opcion("1", "Sponch Fresa"),
@@ -71,9 +76,6 @@ fun AppContent(modifier: Modifier = Modifier) {
     var precio: String by remember { mutableStateOf(("")) }
     var cantidad: String by remember { mutableStateOf(("")) }
 
-    var usuario: String by remember { mutableStateOf("") }
-    var contrasena: String by remember { mutableStateOf("") }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -83,6 +85,42 @@ fun AppContent(modifier: Modifier = Modifier) {
     ) {
 
 
+        Text(
+            text = "Inicio de Sesión",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "Usuario:")
+        TextField(
+            value = usuario,
+            onValueChange = { usuario = it },
+            placeholder = { Text("Ingresa tu usuario") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "Contraseña:")
+        TextField(
+            value = contrasena,
+            onValueChange = { contrasena = it },
+            placeholder = { Text("Ingresa tu contraseña") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = {},
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Iniciar sesión")
+        }
+
+
+        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Producto:")
         ExposedDropdownMenuBox(
             expanded = productoExpandido,
@@ -135,7 +173,8 @@ fun AppContent(modifier: Modifier = Modifier) {
         TextField(
             value = precio,
             onValueChange = { precio = it },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -144,7 +183,8 @@ fun AppContent(modifier: Modifier = Modifier) {
             value = cantidad,
             onValueChange = { cantidad = it },
             placeholder = { Text("Ingresa la cantidad") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
@@ -160,40 +200,7 @@ fun AppContent(modifier: Modifier = Modifier) {
             Text("Enviar")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Inicio de Sesión",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Usuario:")
-        TextField(
-            value = usuario,
-            onValueChange = { usuario = it },
-            placeholder = { Text("Ingresa tu usuario") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "Contraseña:")
-        TextField(
-            value = contrasena,
-            onValueChange = { contrasena = it },
-            placeholder = { Text("Ingresa tu contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {},
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text("Iniciar sesión")
-        }
     }
 }
 
