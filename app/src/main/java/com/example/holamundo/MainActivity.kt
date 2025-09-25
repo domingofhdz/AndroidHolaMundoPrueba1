@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,12 +33,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,26 +64,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppContent(modifier: Modifier = Modifier) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "login") {
+        composable("login") { LoginContent(navController, modifier) }
+        composable("producto") { ProductoContent(navController, modifier) }
+    }
+}
+
+@Composable
+fun LoginContent(navController: NavHostController, modifier: Modifier) {
     val context = LocalContext.current
 
     var usuario: String by remember { mutableStateOf("") }
     var contrasena: String by remember { mutableStateOf("") }
-
-    data class Opcion(val value: String, val label: String)
-    val productoOpciones = listOf(
-        Opcion("1", "Sponch Fresa"),
-        Opcion("2", "Emperador Combinado"),
-        Opcion("3", "Florentinas Cajeta")
-    )
-    var productoExpandido by remember { mutableStateOf(false) }
-    var producto by remember { mutableStateOf(productoOpciones[0]) }
-
-    var comentarios: String by remember { mutableStateOf(("")) }
-    var precio: String by remember { mutableStateOf(("")) }
-    var cantidad: String by remember { mutableStateOf(("")) }
 
     Column(
         modifier = modifier
@@ -85,6 +90,24 @@ fun AppContent(modifier: Modifier = Modifier) {
     ) {
 
 
+        Button(
+            onClick = {
+                navController.navigate("producto")
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Blue
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                "Producto",
+                style = TextStyle(textDecoration = TextDecoration.Underline),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Inicio de Sesión",
             fontSize = 20.sp,
@@ -113,14 +136,72 @@ fun AppContent(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {},
+            onClick = {
+                Toast.makeText(context, "Usuario: ${usuario}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Contraseña: ${contrasena}", Toast.LENGTH_SHORT).show()
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Iniciar sesión")
         }
 
 
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductoContent(navController: NavHostController, modifier: Modifier) {
+    val context = LocalContext.current
+
+    data class Opcion(val value: String, val label: String)
+    val productoOpciones = listOf(
+        Opcion("1", "Sponch Fresa"),
+        Opcion("2", "Emperador Combinado"),
+        Opcion("3", "Florentinas Cajeta")
+    )
+    var productoExpandido by remember { mutableStateOf(false) }
+    var producto by remember { mutableStateOf(productoOpciones[0]) }
+
+    var comentarios: String by remember { mutableStateOf(("")) }
+    var precio: String by remember { mutableStateOf(("")) }
+    var cantidad: String by remember { mutableStateOf(("")) }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+
+        Button(
+            onClick = {
+                navController.navigate("login")
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Blue
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                "Login",
+                style = TextStyle(textDecoration = TextDecoration.Underline),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Reporte",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(text = "Producto:")
         ExposedDropdownMenuBox(
             expanded = productoExpandido,
@@ -208,6 +289,6 @@ fun AppContent(modifier: Modifier = Modifier) {
 @Composable
 fun AppContentPreview() {
     HolaMundoTheme {
-        AppContent()
+        AppContent(modifier = Modifier)
     }
 }
